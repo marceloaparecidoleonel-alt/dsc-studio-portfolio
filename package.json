@@ -1,0 +1,11 @@
+{
+  "name": "dsc-studio-portfolio",
+  "version": "1.0.0",
+  "description": "Portfólio de Visualização Arquitetônica - DSC Studio",
+  "scripts": {
+    "start": "echo 'Site estático - não precisa de build'"
+  },
+  "keywords": ["portfolio", "arquitetura", "renderizacao"],
+  "author": "Marcelo Aparecido Leonel",
+  "license": "MIT"
+}
