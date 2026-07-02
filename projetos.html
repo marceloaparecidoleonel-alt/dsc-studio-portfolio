@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos | Deivid Santos — Visualização Arquitetônica</title>
+    <meta name="description" content="Projetos de visualização arquitetônica. Renders 3D, panoramas 360° e projetos arquitetônicos.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@100;200;300;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen" class="loading-screen" aria-hidden="true">
+    <div class="loading-inner">
+        <div class="loading-logo">
+            <img src="assets/images/DSC LOGO PEQUENO.png" alt="DSC" class="loading-logo-img">
+        </div>
+        <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+        <p class="loading-text">Carregando experiência</p>
+    </div>
+</div>
+
+<!-- CURSOR PERSONALIZADO -->
+<div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-core"></div>
+    <div class="cursor-trail"></div>
+    <div class="cursor-label">VER</div>
+</div>
+
+<!-- HEADER DO CATÁLOGO -->
+<section class="section" style="padding: 4rem 0 2rem;">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label"><span class="label-line"></span><span>Projetos</span></div>
+            <h1 class="section-title">Todos os <em>Projetos</em></h1>
+            <p class="section-subtitle" style="color: white;">Explore nossa coleção completa de visualizações arquitetônicas, renders 3D e panoramas virtuais.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FILTROS DE CATEGORIA -->
+<section class="section" style="padding: 1rem 0 3rem;">
+    <div class="container">
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="residencial">Residencial</button>
+            <button class="filter-btn" data-filter="comercial">Comercial</button>
+            <button class="filter-btn" data-filter="interiores">Interiores</button>
+            <button class="filter-btn" data-filter="fachadas">Fachadas</button>
+        </div>
+    </div>
+</section>
+
+<!-- GRID DE PROJETOS -->
+<section class="section" style="padding: 0 0 4rem;">
+    <div class="container">
+        <div class="portfolio-grid" id="catalogo-grid">
+            <!-- Cards estáticos de fallback -->
+            <article class="portfolio-card" data-category="residencial">
+                <div class="pcard-image-wrapper">
+                    <img src="assets/images/projeto-01.jpg" alt="Casa Moderna Alto Padrão" class="pcard-image" loading="lazy">
+                    <div class="pcard-overlay">
+                        <div class="pcard-overlay-content">
+                            <span class="pcard-cat">Residencial</span>
+                            <h3 class="pcard-title">Casa Moderna Alto Padrão</h3>
+                            <button class="pcard-btn" data-project="1">Ver Projeto <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="pcard-info">
+                    <span class="pcard-cat-tag">Residencial</span>
+                    <h3 class="pcard-name">Casa Moderna Alto Padrão</h3>
+                </div>
+            </article>
+            <article class="portfolio-card" data-category="interiores">
+                <div class="pcard-image-wrapper">
+                    <img src="assets/images/projeto-02.jpg" alt="Living Room Contemporâneo" class="pcard-image" loading="lazy">
+                    <div class="pcard-overlay">
+                        <div class="pcard-overlay-content">
+                            <span class="pcard-cat">Interiores</span>
+                            <h3 class="pcard-title">Living Room Contemporâneo</h3>
+                            <button class="pcard-btn" data-project="2">Ver Projeto <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="pcard-info">
+                    <span class="pcard-cat-tag">Interiores</span>
+                    <h3 class="pcard-name">Living Room Contemporâneo</h3>
+                </div>
+            </article>
+            <article class="portfolio-card" data-category="fachadas">
+                <div class="pcard-image-wrapper">
+                    <img src="assets/images/projeto-03.jpg" alt="Fachada Corporativa Premium" class="pcard-image" loading="lazy">
+                    <div class="pcard-overlay">
+                        <div class="pcard-overlay-content">
+                            <span class="pcard-cat">Fachadas</span>
+                            <h3 class="pcard-title">Fachada Corporativa Premium</h3>
+                            <button class="pcard-btn" data-project="3">Ver Projeto <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="pcard-info">
+                    <span class="pcard-cat-tag">Fachadas</span>
+                    <h3 class="pcard-name">Fachada Corporativa Premium</h3>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL FULLSCREEN DE PROJETO -->
+<div id="project-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <!-- Container para panorama 360° -->
+    <div id="panorama-container" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;"></div>
+
+    <!-- Imagem de fundo fullscreen -->
+    <img id="modal-image" src="" alt="" class="modal-fullscreen-img">
+
+    <!-- Topo: botão fechar + navegação -->
+    <div class="modal-top-bar">
+        <span id="modal-counter" class="modal-img-counter"></span>
+        <button class="modal-close" id="modal-close" aria-label="Fechar modal">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    </div>
+
+    <!-- Setas de navegação -->
+    <button class="modal-arrow modal-arrow-prev" id="modal-prev" aria-label="Anterior">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <button class="modal-arrow modal-arrow-next" id="modal-next" aria-label="Próximo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+
+    <!-- Info overlay -->
+    <div class="modal-info-overlay">
+        <div class="modal-info-left">
+            <span id="modal-category" class="modal-category"></span>
+            <h2 id="modal-title" class="modal-title"></h2>
+            <p id="modal-desc" class="modal-desc"></p>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script type="module" src="js/catalogo.js"></script>
+</body>
+</html>

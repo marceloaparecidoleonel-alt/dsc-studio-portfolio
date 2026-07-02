@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSC Studio — Painel Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen" class="login-screen">
+    <div class="login-bg" aria-hidden="true">
+        <div class="login-orb login-orb-1"></div>
+        <div class="login-orb login-orb-2"></div>
+    </div>
+    <div class="login-card">
+        <div class="login-logo">
+            <span class="logo-dsc">DSC</span>
+            <span class="logo-sep"> | </span>
+            <span class="logo-studio">Studio</span>
+        </div>
+        <p class="login-subtitle">Painel Administrativo</p>
+        <form id="login-form" class="login-form" novalidate>
+            <div class="form-field">
+                <label for="login-email">E-mail</label>
+                <input type="email" id="login-email" placeholder="admin@dscstudio.com" autocomplete="email">
+            </div>
+            <div class="form-field">
+                <label for="login-pass">Senha</label>
+                <div class="input-wrapper">
+                    <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+                    <button type="button" class="btn-eye" id="btn-eye" aria-label="Mostrar senha">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+            </div>
+            <p class="login-error" id="login-error" hidden>Credenciais inválidas. Tente novamente.</p>
+            <button type="submit" class="btn-login">Entrar no Painel</button>
+        </form>
+        <p class="login-hint">Demo: admin@dsc.com / 123456</p>
+    </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="admin-panel" class="admin-panel hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <span class="logo-dsc">DSC</span>
+                <span class="logo-sep"> | </span>
+                <span class="logo-studio">Studio</span>
+            </div>
+            <button class="sidebar-close" id="sidebar-close" aria-label="Fechar menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-group">
+                <span class="nav-group-label">Principal</span>
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-group">
+                <span class="nav-group-label">Portfólio</span>
+                <a href="#" class="nav-item" data-section="renders">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span>Projetos</span>
+                    <span class="nav-badge" id="badge-renders">0</span>
+                </a>
+            </div>
+            <div class="nav-group">
+                <span class="nav-group-label">Configurações</span>
+                <a href="#" class="nav-item" data-section="settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>Configurações</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div>
+                    <p class="user-name">Admin</p>
+                    <p class="user-role">dscstudio3d@gmail.com</p>
+                </div>
+            </div>
+            <button class="btn-logout" id="btn-logout" aria-label="Sair">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="btn-hamburger" id="btn-hamburger" aria-label="Abrir menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <h1 class="page-title" id="page-title">Dashboard</h1>
+            </div>
+            <div class="topbar-right">
+                <a href="../index.html" target="_blank" class="btn-view-site" title="Ver site ao vivo">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    <span>Ver Site</span>
+                </a>
+                <div class="topbar-avatar">A</div>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main class="content-area">
+
+            <!-- ===== DASHBOARD ===== -->
+            <section id="section-dashboard" class="section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-blue">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-renders">0</span>
+                            <span class="stat-label">Projetos</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-indigo">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-tours">0</span>
+                            <span class="stat-label">Com 360°</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-green">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-published">0</span>
+                            <span class="stat-label">Na Home</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-amber">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-draft">0</span>
+                            <span class="stat-label">Em Projetos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title">Últimos itens adicionados</h2>
+                            <button class="btn-text" data-goto="renders">Ver todos</button>
+                        </div>
+                        <div class="recent-list" id="recent-list">
+                            <div class="empty-state">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                <p>Nenhum item ainda. <button class="btn-link" data-goto="renders">Adicionar primeiro projeto.</button></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title">Ações Rápidas</h2>
+                        </div>
+                        <div class="quick-actions">
+                            <button class="quick-action-btn" data-goto="renders" data-action="new-render">
+                                <div class="qa-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                                </div>
+                                <span>Novo Projeto</span>
+                                <svg class="qa-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== RENDERS / PROJETOS ===== -->
+            <section id="section-renders" class="section">
+                <div class="section-toolbar">
+                    <div class="toolbar-left">
+                        <div class="search-box">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="search" placeholder="Buscar projeto..." id="search-renders">
+                        </div>
+                        <div class="filter-tabs">
+                            <button class="ftab active" data-filter="all">Todos</button>
+                            <button class="ftab" data-filter="published">Na Home</button>
+                            <button class="ftab" data-filter="draft">Em Projetos</button>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="btn-new-render">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Novo Projeto
+                    </button>
+                </div>
+
+                <div class="media-grid" id="renders-grid">
+                    <div class="empty-state full">
+                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <h3>Nenhum projeto ainda</h3>
+                        <p>Clique em "Novo Projeto" para adicionar renders e imagens ao portfólio.</p>
+                        <button class="btn-primary" id="btn-new-render-empty">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Adicionar Projeto
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SETTINGS ===== -->
+            <section id="section-settings" class="section">
+                <div class="settings-grid">
+                    <div class="panel">
+                        <div class="panel-header"><h2 class="panel-title">Informações do Estúdio</h2></div>
+                        <form class="settings-form" id="form-info">
+                            <div class="form-row-2">
+                                <div class="form-field">
+                                    <label>Nome do Estúdio</label>
+                                    <input type="text" id="setting-studio-name" value="DSC Studio">
+                                </div>
+                                <div class="form-field">
+                                    <label>Especialidade</label>
+                                    <input type="text" id="setting-specialty" value="Visualização Arquitetônica">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label>Descrição (hero)</label>
+                                <textarea rows="3" id="setting-hero-desc">Criamos renderizações fotorrealistas que transformam projetos arquitetônicos em apresentações impactantes.</textarea>
+                            </div>
+                            <div class="form-row-2">
+                                <div class="form-field">
+                                    <label>WhatsApp</label>
+                                    <input type="text" id="setting-whatsapp" value="+55 43 99125-4884">
+                                </div>
+                                <div class="form-field">
+                                    <label>E-mail</label>
+                                    <input type="email" id="setting-email" value="dscstudio3d@gmail.com">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label>Instagram</label>
+                                <input type="text" id="setting-instagram" value="@dscstudio.oficial">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header" style="margin-top:2rem"><h2 class="panel-title">Alterar Senha</h2></div>
+                        <form class="settings-form" id="form-password">
+                            <div class="form-field">
+                                <label>Senha Atual</label>
+                                <input type="password" id="pass-current" placeholder="••••••••">
+                            </div>
+                            <div class="form-row-2">
+                                <div class="form-field">
+                                    <label>Nova Senha</label>
+                                    <input type="password" id="pass-new" placeholder="••••••••">
+                                </div>
+                                <div class="form-field">
+                                    <label>Confirmar Senha</label>
+                                    <input type="password" id="pass-confirm" placeholder="••••••••">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-outline-danger">Alterar Senha</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<!-- ===== MODAL: NOVO RENDER ===== -->
+<div id="modal-render" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-render-title">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-render-title">Novo Projeto / Render</h2>
+            <button class="modal-close" data-modal="modal-render">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="form-render" novalidate>
+                <div class="form-row-2">
+                    <div class="form-field">
+                        <label>Título do Projeto <span class="req">*</span></label>
+                        <input type="text" id="render-title" placeholder="Ex: Residência Moderna - SP" required>
+                        <span class="field-error"></span>
+                    </div>
+                    <div class="form-field">
+                        <label>Categoria <span class="req">*</span></label>
+                        <select id="render-category" required>
+                            <option value="" disabled selected>Selecionar</option>
+                            <option value="residencial">Residencial</option>
+                            <option value="comercial">Comercial</option>
+                            <option value="interiores">Interiores</option>
+                            <option value="fachada">Fachada</option>
+                            <option value="urbanismo">Urbanismo</option>
+                        </select>
+                        <span class="field-error"></span>
+                    </div>
+                </div>
+                <div class="form-row-2">
+                    <div class="form-field">
+                        <label>Cliente</label>
+                        <input type="text" id="render-cliente" placeholder="Ex: Família Silva">
+                    </div>
+                    <div class="form-field">
+                        <label>Local</label>
+                        <input type="text" id="render-local" placeholder="Ex: São Paulo, SP">
+                    </div>
+                </div>
+                <div class="form-row-2">
+                    <div class="form-field">
+                        <label>Ano</label>
+                        <input type="number" id="render-year" placeholder="2025" min="2000" max="2030">
+                    </div>
+                    <div class="form-field">
+                        <label>Software</label>
+                        <input type="text" id="render-software" placeholder="Ex: 3ds Max + Corona">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Descrição</label>
+                    <textarea id="render-desc" rows="3" placeholder="Breve descrição do projeto..."></textarea>
+                </div>
+
+                <!-- UPLOAD AREA -->
+                <div class="form-field">
+                    <label>Imagens do Projeto <span class="req">*</span></label>
+                    <div class="upload-zone" id="upload-zone-render" data-type="render">
+                        <input type="file" id="file-render" accept="image/*" multiple class="file-input">
+                        <div class="upload-zone-inner">
+                            <div class="upload-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                            </div>
+                            <p class="upload-text">Arraste imagens aqui ou <span class="upload-link">clique para selecionar</span></p>
+                            <p class="upload-hint">PNG, JPG, WEBP — Múltiplas imagens permitidas</p>
+                        </div>
+                        <div class="upload-preview" id="preview-render"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Imagem de Capa <span class="req">*</span></label>
+                    <p class="field-hint">Selecione uma das imagens acima como capa, ou faça upload separado.</p>
+                    <div class="upload-zone upload-zone-sm" id="upload-zone-cover" data-type="cover">
+                        <input type="file" id="file-cover" accept="image/*" class="file-input">
+                        <div class="upload-zone-inner">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            <span>Upload da capa</span>
+                        </div>
+                        <div class="upload-preview" id="preview-cover"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Panorama 360° (opcional)</label>
+                    <p class="field-hint">Adicione uma imagem equiretangular (2:1) para criar um panorama virtual.</p>
+                    <div class="upload-zone upload-zone-sm" id="upload-zone-360" data-type="360">
+                        <input type="file" id="file-360" accept="image/*" class="file-input">
+                        <div class="upload-zone-inner">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                            <span>Upload imagem 360°</span>
+                        </div>
+                        <div class="upload-preview" id="preview-360"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Status</label>
+                    <div class="toggle-group">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="render-published" checked>
+                            <span class="toggle-switch"></span>
+                            <span class="toggle-text">Marcar como destaque</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Panorama 360°</label>
+                    <div class="toggle-group">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="render-show360">
+                            <span class="toggle-switch"></span>
+                            <span class="toggle-text">Mostrar panorama virtual na home</span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost" data-modal="modal-render">Cancelar</button>
+            <button class="btn-primary" id="btn-save-render">Salvar Projeto</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: DELETE CONFIRM -->
+<div id="modal-delete" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h2 class="modal-title">Confirmar exclusão</h2>
+        </div>
+        <div class="modal-body">
+            <p style="color:var(--clr-text-2)">Tem certeza que deseja excluir <strong id="delete-item-name" style="color:var(--clr-text)"></strong>? Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost" data-modal="modal-delete">Cancelar</button>
+            <button class="btn-danger" id="btn-confirm-delete">Excluir</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
