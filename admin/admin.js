@@ -185,7 +185,10 @@ async function fsSaveProject(data, id) {
         software:   data.software   || '',
         imagemCapa: data.imagemCapa || '',
         galeria:    data.galeria    || [],
+        /* Compatibilidade: mantém imagem360 para projetos antigos */
         imagem360:  data.imagem360  || '',
+        /* Novo campo para múltiplos panoramas */
+        panoramas360: data.panoramas360 || [],
         destaque:   !!data.destaque,
         mostrar360: data.mostrar360 === true,
         updatedAt:  serverTimestamp(),
@@ -533,11 +536,20 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        /* Preview 360 */
+        /* Preview 360 - Compatibilidade com projetos antigos */
         var p360 = qs('#preview-360');
         if (p360) {
             p360.innerHTML = '';
-            if (item.imagem360) addPreviewThumb(p360, item.imagem360, item.imagem360, null);
+            /* Se tem panoramas360 (novo formato), usa array */
+            if (Array.isArray(item.panoramas360) && item.panoramas360.length > 0) {
+                item.panoramas360.forEach(function(pano, idx) {
+                    addPreviewThumb(p360, pano.url, pano.url, null);
+                });
+            }
+            /* Se tem imagem360 (formato antigo), usa compatibilidade */
+            else if (item.imagem360) {
+                addPreviewThumb(p360, item.imagem360, item.imagem360, null);
+            }
         }
 
         qs('#modal-render-title').textContent = 'Editar Projeto';
@@ -590,17 +602,48 @@ document.addEventListener('DOMContentLoaded', function () {
                 galeriaUrls = galeriaExisting;
             }
 
-            /* ── 3. Upload imagem 360 ── */
-            var img360Url = editingId ? (allProjects.find(function(p){ return p.id === editingId; }) || {}).imagem360 || '' : '';
+            /* ── 3. Upload panoramas 360 ── */
+            var panoramas360 = [];
             var p360Thumbs = qsa('#preview-360 .preview-thumb');
-            var p360Thumb = p360Thumbs[p360Thumbs.length - 1];
-            if (p360Thumb && p360Thumb._file) {
-                showToast('Enviando panorama 360°...', 'success');
-                img360Url = await uploadToCloudinary(p360Thumb._file, function (p) {
+            var p360Files = p360Thumbs.filter(function (t) { return !!t._file; }).map(function (t) { return t._file; });
+            var p360Existing = p360Thumbs.filter(function (t) { return !!t._url; }).map(function (t) { return t._url; });
+
+            /* Compatibilidade: se tem apenas um panorama antigo, mantém imagem360 */
+            var img360Url = editingId ? (allProjects.find(function(p){ return p.id === editingId; }) || {}).imagem360 || '' : '';
+
+            if (p360Files.length) {
+                showToast('Enviando panoramas 360° (' + p360Files.length + ' imagens)...', 'success');
+                var novasUrls = await uploadMultiple(p360Files, function (p) {
                     showProgress(qs('#preview-360'), p);
                 });
-            } else if (p360Thumb && p360Thumb._url) {
-                img360Url = p360Thumb._url;
+                /* Cria array de panoramas com IDs e nomes automáticos */
+                var todasUrls = p360Existing.concat(novasUrls);
+                panoramas360 = todasUrls.map(function(url, idx) {
+                    return {
+                        id: 'pano_' + Date.now() + '_' + idx,
+                        nome: 'Panorama ' + (idx + 1),
+                        url: url
+                    };
+                });
+                /* Para compatibilidade, mantém o primeiro panorama em imagem360 */
+                img360Url = todasUrls[0] || '';
+            } else if (p360Existing.length) {
+                /* Se não tem novos arquivos mas tem existentes, mantém array atual */
+                var existingProject = editingId ? (allProjects.find(function(p){ return p.id === editingId; }) || {}) : {};
+                if (Array.isArray(existingProject.panoramas360) && existingProject.panoramas360.length > 0) {
+                    panoramas360 = existingProject.panoramas360;
+                    img360Url = existingProject.panoramas360[0].url || '';
+                } else if (p360Existing.length > 0) {
+                    /* Converte formato antigo para novo */
+                    panoramas360 = p360Existing.map(function(url, idx) {
+                        return {
+                            id: 'pano_' + Date.now() + '_' + idx,
+                            nome: 'Panorama ' + (idx + 1),
+                            url: url
+                        };
+                    });
+                    img360Url = p360Existing[0] || '';
+                }
             }
 
             /* ── 4. Salva no Firestore ── */
@@ -615,6 +658,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 imagemCapa: capaUrl,
                 galeria:    galeriaUrls,
                 imagem360:  img360Url,
+                panoramas360: panoramas360,
                 destaque:   !!(qs('#render-published') || {}).checked,
                 mostrar360: !!(qs('#render-show360')    || {}).checked,
             };

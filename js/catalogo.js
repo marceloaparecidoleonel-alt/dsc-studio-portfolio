@@ -124,8 +124,10 @@ function normalizeProject(id, data) {
         ano:      data.ano        || '',
         image:    data.imagemCapa || 'assets/images/placeholder.jpg',
         galeria:  data.galeria    || [],
-        has360:   !!data.imagem360,
-        imagem360: data.imagem360 || '',
+        /* Compatibilidade: verifica panoramas360 ou imagem360 */
+        has360:   !!(Array.isArray(data.panoramas360) ? data.panoramas360.length > 0 : data.imagem360),
+        imagem360: Array.isArray(data.panoramas360) && data.panoramas360.length > 0 ? data.panoramas360[0].url : (data.imagem360 || ''),
+        panoramas360: data.panoramas360 || [],
         destaque: !!data.destaque,
         mostrar360: data.mostrar360 || false,
     };

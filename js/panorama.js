@@ -63,17 +63,34 @@ function setupToursListener() {
             toursData = [];
             snap.docs.forEach((d) => {
                 const data = d.data();
-                if (data.imagem360 && data.mostrar360 === true) {
-                    toursData.push({
-                        id:       d.id,
-                        label:    data.titulo    || 'Sem título',
-                        desc:     data.descricao || '',
-                        image:    data.imagemCapa || data.imagem360,
-                        panorama: data.imagem360,
-                    });
+                if (data.mostrar360 === true) {
+                    /* Compatibilidade: verifica se tem panoramas360 (novo) ou imagem360 (antigo) */
+                    let panoramas = [];
+                    if (Array.isArray(data.panoramas360) && data.panoramas360.length > 0) {
+                        panoramas = data.panoramas360;
+                    } else if (data.imagem360) {
+                        /* Converte formato antigo para novo */
+                        panoramas = [{
+                            id: 'pano_legacy',
+                            nome: 'Panorama 1',
+                            url: data.imagem360
+                        }];
+                    }
+
+                    if (panoramas.length > 0) {
+                        toursData.push({
+                            id:        d.id,
+                            label:     data.titulo    || 'Sem título',
+                            desc:      data.descricao || '',
+                            image:     data.imagemCapa || panoramas[0].url,
+                            panoramas: panoramas,
+                            /* Para compatibilidade, mantém o primeiro panorama */
+                            panorama:  panoramas[0].url,
+                        });
+                    }
                 }
             });
-            
+
             // Renderiza novamente quando houver mudanças
             if (typeof Tour360Grid !== 'undefined') {
                 Tour360Grid.render();
@@ -153,6 +170,8 @@ const PanoramaViewer = (() => {
 
     let activeScene   = null;
     let viewerInstance = null; /* Referência para Pannellum quando integrado */
+    let currentPanoramas = []; /* Array de panoramas do projeto atual */
+    let currentPanoramaIndex = 0; /* Índice do panorama atual */
 
     /**
      * Cria o placeholder visual simulando o viewer
@@ -232,13 +251,33 @@ const PanoramaViewer = (() => {
     /**
      * Carrega uma URL externa (ex: Cloudinary) diretamente no viewer.
      * Usa Pannellum se disponível, senão usa placeholder.
-     * @param {string} url        — URL da imagem equiretangular
+     * @param {string|Array} urlOrPanoramas  — URL da imagem ou array de panoramas
      * @param {string} [label]    — nome do ambiente
      */
-    const loadUrl = (url, label) => {
-        console.log('[panorama] loadUrl chamado:', url, label);
-        if (!url) {
-            console.warn('[panorama] URL vazia, abortando.');
+    const loadUrl = (urlOrPanoramas, label) => {
+        console.log('[panorama] loadUrl chamado:', urlOrPanoramas, label);
+
+        /* Normaliza para array de panoramas */
+        if (typeof urlOrPanoramas === 'string') {
+            currentPanoramas = [{ id: 'pano_single', nome: 'Panorama 1', url: urlOrPanoramas }];
+        } else if (Array.isArray(urlOrPanoramas) && urlOrPanoramas.length > 0) {
+            currentPanoramas = urlOrPanoramas;
+        } else {
+            console.warn('[panorama] URL ou panoramas vazios, abortando.');
+            return;
+        }
+
+        currentPanoramaIndex = 0;
+        renderPanorama(currentPanoramaIndex, label);
+    };
+
+    /**
+     * Renderiza um panorama específico com seletor se houver múltiplos
+     */
+    const renderPanorama = (index, label) => {
+        const panorama = currentPanoramas[index];
+        if (!panorama || !panorama.url) {
+            console.warn('[panorama] Panorama inválido no índice:', index);
             return;
         }
 
@@ -252,15 +291,22 @@ const PanoramaViewer = (() => {
         viewerInstance = null;
         viewerEl.innerHTML = '';
 
+        /* Cria container principal */
+        const mainContainer = document.createElement('div');
+        mainContainer.style.cssText = 'position:relative;width:100%;height:100%;';
+        viewerEl.appendChild(mainContainer);
+
+        /* Container do viewer */
+        const viewerContainer = document.createElement('div');
+        viewerContainer.id = 'pnlm-container';
+        viewerContainer.style.cssText = 'width:100%;height:100%;';
+        mainContainer.appendChild(viewerContainer);
+
         /* Usa Pannellum se disponível */
         if (typeof pannellum !== 'undefined') {
-            const container = document.createElement('div');
-            container.id = 'pnlm-container';
-            container.style.cssText = 'width:100%;height:100%;';
-            viewerEl.appendChild(container);
             viewerInstance = pannellum.viewer('pnlm-container', {
                 type:              'equirectangular',
-                panorama:          url,
+                panorama:          panorama.url,
                 autoLoad:          true,
                 autoRotate:        -2,
                 compass:           false,
@@ -271,16 +317,42 @@ const PanoramaViewer = (() => {
                 maxHfov:           130,
                 pitch:             0,
                 yaw:               0,
-                title:             label || '',
+                title:             panorama.nome || label || '',
             });
         } else {
             /* Fallback: placeholder simples */
-            viewerEl.innerHTML =
+            viewerContainer.innerHTML =
                 '<div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--clr-bg);padding:20px;">' +
-                    '<img src="' + url + '" alt="' + (label || 'Panorama 360°') + '" style="max-width:100%;max-height:400px;object-fit:contain;border-radius:8px;">' +
+                    '<img src="' + panorama.url + '" alt="' + (panorama.nome || label || 'Panorama 360°') + '" style="max-width:100%;max-height:400px;object-fit:contain;border-radius:8px;">' +
                     '<p style="margin-top:16px;color:#fff;font-size:13px;">Pannellum não carregado.</p>' +
                 '</div>';
         }
+
+        /* Adiciona seletor se houver múltiplos panoramas */
+        if (currentPanoramas.length > 1) {
+            renderPanoramaSelector(mainContainer, label);
+        }
+    };
+
+    /**
+     * Renderiza seletor de panoramas (bolinhas)
+     */
+    const renderPanoramaSelector = (container, label) => {
+        const selector = document.createElement('div');
+        selector.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:8px 16px;background:rgba(0,0,0,0.6);border-radius:20px;z-index:10;';
+
+        currentPanoramas.forEach((pano, idx) => {
+            const dot = document.createElement('button');
+            dot.style.cssText = 'width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,0.5);background:' + (idx === currentPanoramaIndex ? '#fff' : 'transparent') + ';cursor:pointer;transition:all 0.2s;';
+            dot.setAttribute('aria-label', pano.nome || 'Panorama ' + (idx + 1));
+            dot.addEventListener('click', () => {
+                currentPanoramaIndex = idx;
+                renderPanorama(idx, label);
+            });
+            selector.appendChild(dot);
+        });
+
+        container.appendChild(selector);
     };
 
     /**
@@ -353,10 +425,10 @@ const renderTourCards = (tours) => {
             '</div>';
 
         const exploreBtn = card.querySelector('.tour-explore-btn');
-        exploreBtn.addEventListener('click', (e) => { e.stopPropagation(); PanoramaViewer.loadUrl(tour.panorama, tour.label); });
-        card.addEventListener('click', () => PanoramaViewer.loadUrl(tour.panorama, tour.label));
+        exploreBtn.addEventListener('click', (e) => { e.stopPropagation(); PanoramaViewer.loadUrl(tour.panoramas || tour.panorama, tour.label); });
+        card.addEventListener('click', () => PanoramaViewer.loadUrl(tour.panoramas || tour.panorama, tour.label));
         card.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); PanoramaViewer.loadUrl(tour.panorama, tour.label); }
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); PanoramaViewer.loadUrl(tour.panoramas || tour.panorama, tour.label); }
         });
 
         grid.appendChild(card);
