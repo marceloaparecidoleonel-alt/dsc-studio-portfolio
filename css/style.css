@@ -908,12 +908,18 @@ input, textarea, select {
     min-width: 120px;
     flex: 1;
     text-align: center;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
     position: relative;
 }
 
-.stat-item:last-child {
-    border-right: none;
+.stat-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 60%;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .stat-program-name {
