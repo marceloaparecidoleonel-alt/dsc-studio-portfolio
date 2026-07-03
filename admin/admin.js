@@ -747,7 +747,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         bindUploadZone(qs('#upload-zone-360'), function (files) {
             var p360 = qs('#preview-360');
-            if (p360) { p360.innerHTML = ''; previewFilesLocal([files[0]], p360); }
+            if (p360) { p360.innerHTML = ''; previewFilesLocal(files, p360); }
         });
 
         /* ── Filtros e busca ── */

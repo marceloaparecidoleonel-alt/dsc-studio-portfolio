@@ -82,7 +82,8 @@ function setupToursListener() {
                             id:        d.id,
                             label:     data.titulo    || 'Sem título',
                             desc:      data.descricao || '',
-                            image:     data.imagemCapa || panoramas[0].url,
+                            /* Card deve usar o primeiro panorama, não a capa */
+                            image:     panoramas[0].url,
                             panoramas: panoramas,
                             /* Para compatibilidade, mantém o primeiro panorama */
                             panorama:  panoramas[0].url,
