@@ -7,7 +7,7 @@
 
 /* ── FIREBASE (CDN via importmap no HTML) ────────── */
 import { initializeApp }                     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider }
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider, setPersistence, browserSessionPersistence }
     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
     getFirestore, collection, doc,
@@ -34,6 +34,11 @@ const COLLECTION    = 'projetos';
 const fbApp  = initializeApp(firebaseConfig);
 const fbAuth = getAuth(fbApp);
 const fbDb   = getFirestore(fbApp);
+
+/* Configura persistência SESSION para painel admin (expira ao fechar navegador) */
+setPersistence(fbAuth, browserSessionPersistence).catch(function(err) {
+    console.error('Erro ao configurar persistência:', err);
+});
 
 /* ══════════════════════════════════════════════════
    CLOUDINARY UPLOAD
@@ -262,6 +267,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var loginScreen = qs('#login-screen');
     var adminPanel  = qs('#admin-panel');
     var panelInited = false;
+
+    /* Garante estado inicial correto: login visível, painel oculto */
+    if (loginScreen) loginScreen.classList.remove('hidden');
+    if (adminPanel)  adminPanel.classList.add('hidden');
 
     function showPanel(user) {
         if (loginScreen) loginScreen.classList.add('hidden');
