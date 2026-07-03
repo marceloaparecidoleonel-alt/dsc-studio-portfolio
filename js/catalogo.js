@@ -241,15 +241,14 @@ const ProjectModal = (() => {
         galleryIndex = idx;
         const imgUrl = galleryImages[idx];
 
-        /* Verifica se é panorama 360° (prefixo especial) */
+        /* Verifica se é panorama 360° (objeto especial ou prefixo) */
+        if (typeof imgUrl === 'object' && imgUrl.type === '360') {
+            show360(imgUrl.panoramas);
+            return;
+        }
         if (typeof imgUrl === 'string' && imgUrl.startsWith('360__')) {
-            const panoramaData = imgUrl.replace('360__', '');
-            /* Se for string (formato antigo), converte para array */
-            if (typeof panoramaData === 'string') {
-                show360(panoramaData);
-            } else {
-                show360(panoramaData);
-            }
+            const panoramaUrl = imgUrl.replace('360__', '');
+            show360(panoramaUrl);
             return;
         }
 
@@ -356,7 +355,14 @@ const ProjectModal = (() => {
         galleryImages = [project.image, ...(project.galeria || [])].filter(Boolean);
         /* Adiciona panorama 360° no final se existir */
         if (project.has360) {
-            galleryImages.push('360__' + (project.panoramas360 || project.imagem360));
+            /* Se for array (novo formato), adiciona como objeto especial */
+            if (Array.isArray(project.panoramas360) && project.panoramas360.length > 0) {
+                galleryImages.push({ type: '360', panoramas: project.panoramas360 });
+            }
+            /* Se for string (formato antigo), concatena normalmente */
+            else if (project.imagem360) {
+                galleryImages.push('360__' + project.imagem360);
+            }
         }
         if (galleryImages.length === 0) {
             console.error('[ProjectModal] Nenhuma imagem no projeto');
