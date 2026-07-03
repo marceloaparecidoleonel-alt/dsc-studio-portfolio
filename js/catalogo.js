@@ -239,16 +239,11 @@ const ProjectModal = (() => {
     const showImage = (idx) => {
         if (idx < 0 || idx >= galleryImages.length) return;
         galleryIndex = idx;
-        const imgUrl = galleryImages[idx];
+        const mediaItem = galleryImages[idx];
 
-        /* Verifica se é panorama 360° (objeto especial ou prefixo) */
-        if (typeof imgUrl === 'object' && imgUrl.type === '360') {
-            show360(imgUrl.panoramas);
-            return;
-        }
-        if (typeof imgUrl === 'string' && imgUrl.startsWith('360__')) {
-            const panoramaUrl = imgUrl.replace('360__', '');
-            show360(panoramaUrl);
+        /* Verifica tipo de mídia */
+        if (mediaItem.type === 'panorama') {
+            show360(mediaItem.panoramas, mediaItem.url);
             return;
         }
 
@@ -258,7 +253,7 @@ const ProjectModal = (() => {
         if (container) container.style.display = 'none';
         if (imgEl) {
             imgEl.style.display = 'block';
-            imgEl.src = imgUrl;
+            imgEl.src = mediaItem.url;
         }
         /* Destroi viewer 360° se existir */
         if (viewerInstance && typeof viewerInstance.destroy === 'function') {
@@ -270,24 +265,31 @@ const ProjectModal = (() => {
         if (nextBtn) nextBtn.style.visibility = idx === galleryImages.length - 1 ? 'hidden' : 'visible';
     };
 
-    const show360 = (urlOrPanoramas) => {
-        if (!urlOrPanoramas) return;
+    const show360 = (panoramas, initialUrl) => {
+        if (!panoramas) return;
         is360View = true;
         const container = document.getElementById('panorama-container');
         if (imgEl) imgEl.style.display = 'none';
         if (container) container.style.display = 'block';
 
         /* Normaliza para array de panoramas */
-        if (typeof urlOrPanoramas === 'string') {
-            currentPanoramas360 = [{ id: 'pano_single', nome: 'Panorama 1', url: urlOrPanoramas }];
-        } else if (Array.isArray(urlOrPanoramas) && urlOrPanoramas.length > 0) {
-            currentPanoramas360 = urlOrPanoramas;
+        if (typeof panoramas === 'string') {
+            currentPanoramas360 = [{ id: 'pano_single', nome: 'Panorama 1', url: panoramas }];
+        } else if (Array.isArray(panoramas) && panoramas.length > 0) {
+            currentPanoramas360 = panoramas;
         } else {
             console.warn('[catalogo] URL ou panoramas vazios');
             return;
         }
 
-        currentPanoramaIndex = 0;
+        /* Encontra o índice do panorama inicial */
+        if (initialUrl) {
+            const idx = currentPanoramas360.findIndex(p => p.url === initialUrl);
+            currentPanoramaIndex = idx >= 0 ? idx : 0;
+        } else {
+            currentPanoramaIndex = 0;
+        }
+
         renderPanorama360();
     };
 
@@ -316,34 +318,18 @@ const ProjectModal = (() => {
             });
         }
 
-        /* Atualiza contador e controles */
+        /* Atualiza contador com índice na lista única de mídia */
         if (counterEl) {
-            if (currentPanoramas360.length > 1) {
-                counterEl.textContent = `${currentPanoramaIndex + 1} / ${currentPanoramas360.length}`;
-            } else {
-                counterEl.textContent = '360°';
-            }
+            counterEl.textContent = `${galleryIndex + 1} / ${galleryImages.length}`;
         }
 
-        /* Mostra controles apenas se houver múltiplos panoramas */
+        /* Mostra controles conforme posição na lista única */
         if (prevBtn) {
-            prevBtn.style.visibility = currentPanoramas360.length > 1 ? 'visible' : 'hidden';
+            prevBtn.style.visibility = galleryIndex === 0 ? 'hidden' : 'visible';
         }
         if (nextBtn) {
-            nextBtn.style.visibility = currentPanoramas360.length > 1 ? 'visible' : 'hidden';
+            nextBtn.style.visibility = galleryIndex === galleryImages.length - 1 ? 'hidden' : 'visible';
         }
-    };
-
-    const nextPanorama = () => {
-        if (currentPanoramas360.length <= 1) return;
-        currentPanoramaIndex = (currentPanoramaIndex + 1) % currentPanoramas360.length;
-        renderPanorama360();
-    };
-
-    const prevPanorama = () => {
-        if (currentPanoramas360.length <= 1) return;
-        currentPanoramaIndex = (currentPanoramaIndex - 1 + currentPanoramas360.length) % currentPanoramas360.length;
-        renderPanorama360();
     };
 
     const open = (projectId) => {
@@ -352,18 +338,29 @@ const ProjectModal = (() => {
             console.error('[ProjectModal] Projeto não encontrado:', projectId);
             return;
         }
-        galleryImages = [project.image, ...(project.galeria || [])].filter(Boolean);
-        /* Adiciona panorama 360° no final se existir */
+
+        /* Cria lista única de mídia com tipos */
+        galleryImages = [];
+
+        /* Adiciona imagens estáticas */
+        const staticImages = [project.image, ...(project.galeria || [])].filter(Boolean);
+        staticImages.forEach(url => {
+            galleryImages.push({ type: 'image', url: url });
+        });
+
+        /* Adiciona panoramas 360° se existirem */
         if (project.has360) {
-            /* Se for array (novo formato), adiciona como objeto especial */
             if (Array.isArray(project.panoramas360) && project.panoramas360.length > 0) {
-                galleryImages.push({ type: '360', panoramas: project.panoramas360 });
-            }
-            /* Se for string (formato antigo), concatena normalmente */
-            else if (project.imagem360) {
-                galleryImages.push('360__' + project.imagem360);
+                /* Novo formato: array de panoramas */
+                project.panoramas360.forEach(pano => {
+                    galleryImages.push({ type: 'panorama', url: pano.url, panoramas: project.panoramas360 });
+                });
+            } else if (project.imagem360) {
+                /* Formato antigo: único panorama */
+                galleryImages.push({ type: 'panorama', url: project.imagem360, panoramas: [{ id: 'pano_legacy', nome: 'Panorama 1', url: project.imagem360 }] });
             }
         }
+
         if (galleryImages.length === 0) {
             console.error('[ProjectModal] Nenhuma imagem no projeto');
             return;
@@ -399,17 +396,8 @@ const ProjectModal = (() => {
     };
 
     const navigateGallery = (direction) => {
-        if (is360View) {
-            /* Navega entre panoramas quando em modo 360° */
-            if (direction === 'next') {
-                nextPanorama();
-            } else {
-                prevPanorama();
-            }
-        } else {
-            /* Navega galeria normal */
-            showImage(direction === 'next' ? galleryIndex + 1 : galleryIndex - 1);
-        }
+        /* Navegação contínua na lista única de mídia */
+        showImage(direction === 'next' ? galleryIndex + 1 : galleryIndex - 1);
     };
 
     const init = () => {
