@@ -206,6 +206,16 @@
     }
 
     /* Hero */
+    .hero-section {
+        padding-top: 2rem;
+        min-height: auto;
+    }
+
+    .hero-container {
+        gap: 2.5rem;
+        padding-top: 2rem;
+    }
+
     .hero-title {
         font-size: clamp(2.5rem, 8vw, 3.5rem);
         letter-spacing: -1px;
@@ -218,6 +228,40 @@
     .hero-stats {
         gap: 1.5rem;
         flex-wrap: wrap;
+    }
+
+    /* Logo no mobile - reduzir tamanho */
+    .nav-logo {
+        max-width: 70%;
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+    }
+
+    /* Imagem principal no mobile - ocupar mais largura */
+    .hero-visual {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .hero-image-wrapper {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    /* Reduzir espaços verticais */
+    .hero-content {
+        gap: 1.5rem;
+    }
+
+    .hero-badge {
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-actions {
+        gap: 0.75rem;
+        margin-top: 0.5rem;
     }
 
     .stat-logos {
@@ -446,12 +490,52 @@
 
     /* Hero */
     .hero-section {
-        min-height: 100svh;
+        min-height: auto;
+        padding-top: 1.5rem;
+    }
+
+    .hero-container {
+        gap: 2rem;
+        padding-top: 1.5rem;
     }
 
     .hero-title {
         font-size: clamp(2.2rem, 10vw, 3rem);
         letter-spacing: -1px;
+    }
+
+    /* Logo no celular - reduzir ainda mais */
+    .nav-logo {
+        max-width: 60%;
+    }
+
+    .logo-text {
+        font-size: 1.125rem;
+    }
+
+    /* Imagem principal no celular */
+    .hero-visual {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .hero-image-wrapper {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    /* Reduzir espaços verticais no celular */
+    .hero-content {
+        gap: 1.25rem;
+    }
+
+    .hero-badge {
+        margin-bottom: 0.25rem;
+    }
+
+    .hero-actions {
+        gap: 0.5rem;
+        margin-top: 0.25rem;
     }
 
     .hero-stats {
