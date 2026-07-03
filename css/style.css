@@ -892,8 +892,10 @@ input, textarea, select {
 .stat-logos {
     display: flex;
     align-items: center;
-    gap: 3rem;
+    justify-content: center;
+    gap: 2rem;
     margin-left: -40px;
+    width: 100%;
 }
 
 .stat-item {
@@ -901,13 +903,11 @@ input, textarea, select {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0 1.5rem;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.stat-item:last-child {
-    border-right: none;
+    gap: 0.75rem;
+    padding: 1.5rem 2rem;
+    min-width: 120px;
+    flex: 1;
+    text-align: center;
 }
 
 .stat-program-name {
@@ -917,13 +917,16 @@ input, textarea, select {
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-align: center;
 }
 
 .stat-logo {
     height: 60px;
     width: auto;
+    max-width: 80px;
     opacity: 0.9;
     transition: opacity 0.3s ease;
+    object-fit: contain;
 }
 
 .stat-logo:hover {

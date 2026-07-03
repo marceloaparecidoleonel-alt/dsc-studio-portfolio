@@ -268,11 +268,13 @@
     }
 
     .stat-item {
-        padding: 0 0.75rem;
+        padding: 1rem 1.25rem;
+        min-width: 80px;
     }
 
     .stat-logo {
         height: 35px;
+        max-width: 50px;
     }
 
     .stat-program-name {
@@ -535,6 +537,7 @@
     /* Stats - reduzir ainda mais */
     .stat-logo {
         height: 30px;
+        max-width: 45px;
     }
 
     .stat-program-name {
@@ -542,12 +545,8 @@
     }
 
     .stat-item {
-        padding: 0 0.75rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .stat-item:last-child {
-        border-right: none;
+        padding: 0.75rem 1rem;
+        min-width: 70px;
     }
 
     .stat-number {
@@ -733,12 +732,13 @@
     }
 
     .stat-item {
-        padding: 0 0.5rem;
-        border-right: none;
+        padding: 0.5rem 0.75rem;
+        min-width: 60px;
     }
 
     .stat-logo {
         height: 35px;
+        max-width: 45px;
     }
 
     .stat-program-name {
