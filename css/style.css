@@ -100,11 +100,11 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    cursor: none;
+    cursor: auto;
 }
 
-/* Esconde cursor nativo quando cursor custom está ativo */
-a, button, [role="button"] { cursor: none; }
+/* Cursor nativo ativo */
+a, button, [role="button"] { cursor: auto; }
 
 img {
     max-width: 100%;
@@ -147,6 +147,7 @@ input, textarea, select {
     left: 0;
     pointer-events: none;
     z-index: 9999;
+    display: none;
 }
 
 /* Ponto central sólido */
